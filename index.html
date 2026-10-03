@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mi Estudio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Mi Estudio">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:-apple-system,Helvetica,sans-serif;background:#fdf2f6;color:#222;padding-bottom:80px}
+header{background:#c2185b;color:#fff;padding:calc(10px + env(safe-area-inset-top)) 12px 10px;text-align:center;font-weight:bold;font-size:18px}
+#tabs{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid #ddd;padding-bottom:env(safe-area-inset-bottom)}
+#tabs button{flex:1;padding:12px 0;border:0;background:#fff;font-size:13px;color:#777}
+#tabs button.on{color:#c2185b;font-weight:bold;border-top:3px solid #c2185b}
+#main{padding:10px}
+input,select,textarea{font-size:16px;padding:9px;width:100%;border:1px solid #ccc;border-radius:8px;margin:4px 0 8px;background:#fff}
+input[type=color]{height:44px;padding:2px}
+.card{background:#fff;border-radius:12px;padding:10px;margin-bottom:8px;display:flex;align-items:center}
+.info{flex:1;min-width:0}.info small{color:#777;display:block}
+.low{color:#d00000}.tag{font-size:11px;background:#eee;border-radius:6px;padding:1px 6px;color:#666}
+.dot{display:inline-block;width:16px;height:16px;border-radius:8px;border:1px solid #0003;vertical-align:-2px;margin-right:6px}
+.q{display:flex;align-items:center}
+.q button{width:42px;height:42px;border-radius:21px;border:0;background:#c2185b;color:#fff;font-size:22px}
+.q button.m{background:#9e9e9e}
+.q span{min-width:36px;text-align:center;font-size:20px;font-weight:bold}
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:#c2185b;color:#fff;font-size:17px;margin:8px 0}
+.btn.g{background:#999}
+.x{border:0;background:none;color:#bbb;font-size:18px;padding:4px 8px}
+h3{margin:10px 2px 6px}
+.chips{white-space:nowrap;overflow-x:auto;padding-bottom:6px}
+.chip{display:inline-block;padding:7px 14px;border-radius:18px;background:#fff;border:1px solid #c2185b;color:#c2185b;margin-right:6px;font-size:15px}
+.chip.on{background:#c2185b;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:#fff;border-radius:12px;padding:8px 4px;text-align:center}
+.tile b{display:block;font-size:13px}.tile small{display:block;color:#777;font-size:12px}
+.sw{position:relative;display:block;width:60px;height:60px;border-radius:30px;margin:0 auto 6px;border:2px solid #0002;overflow:hidden}
+.sw input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0}
+.row{display:flex;gap:8px;align-items:center}
+</style>
+</head>
+<body>
+<header>💅 Mi Estudio de Uñas</header>
+<div id="main"></div>
+<div id="tabs"></div>
+<script>
+const KEY='esmaltes_v1';
+const seed=[{"id": 1, "nombre": "Sky Mist", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Azul", "hex": "#A9C7E3", "ref": "170", "url": "https://www.manicura24.es/products/esmalte-semipermanente-sky-mist-170", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 2, "nombre": "Atmosphere", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Azul", "hex": "#7FA6D8", "ref": "175", "url": "https://www.manicura24.es/products/esmalte-semipermanente-atmosphere-175", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 3, "nombre": "Baby Blue", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Azul", "hex": "#A8D0F0", "ref": "174", "url": "https://www.manicura24.es/products/esmalte-semipermanente-baby-blue-174", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 4, "nombre": "Super Pop", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Azul", "hex": "#2E6FD8", "ref": "181", "url": "https://www.manicura24.es/products/esmalte-semipermanente-super-pop-181", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 5, "nombre": "Nightfall", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Azul", "hex": "#1D2A55", "ref": "284", "url": "https://www.manicura24.es/products/esmalte-semipermanente-nightfall-284", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 6, "nombre": "Pistachio", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Verde", "hex": "#B5D69C", "ref": "150", "url": "", "precio": 0.0, "stock": 1, "need": 0, "desc": true}, {"id": 7, "nombre": "Fresh Mojito", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Verde", "hex": "#8FD3A0", "ref": "157", "url": "https://www.manicura24.es/products/esmalte-semipermanente-fresh-mojito-157", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 8, "nombre": "Cool Matcha", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Verde", "hex": "#A3B77A", "ref": "167", "url": "https://www.manicura24.es/products/esmalte-semipermanente-cool-matcha-167", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 9, "nombre": "Evergreen", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Verde", "hex": "#1F5A3C", "ref": "168", "url": "https://www.manicura24.es/products/esmalte-semipermanente-evergreen-168", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 10, "nombre": "Secret Kiss", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Rosa", "hex": "#E7B4B8", "ref": "83", "url": "https://www.manicura24.es/products/esmalte-semipermanente-secret-kiss-083", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 11, "nombre": "Magic Moment", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Rosa", "hex": "#E88FA6", "ref": "133", "url": "", "precio": 0.0, "stock": 1, "need": 0, "desc": true}, {"id": 12, "nombre": "Glaseado Rosa 2", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Glaseado", "hex": "#F0C8D6", "ref": "2", "url": "https://www.manicura24.es/products/esmalte-semipermanente-glazed-nr-02", "precio": 6.99, "stock": 1, "need": 0, "desc": false}, {"id": 13, "nombre": "Velve Rose (Cat eye)", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Rosa", "hex": "#C85A7C", "ref": "291", "url": "https://www.manicura24.es/products/esmalte-permanente-cat-eye-velvet-rose", "precio": 6.99, "stock": 1, "need": 0, "desc": false}, {"id": 14, "nombre": "French Cream", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Francesa", "hex": "#F3E2D0", "ref": "5", "url": "", "precio": 0.0, "stock": 1, "need": 0, "desc": true}, {"id": 15, "nombre": "Dark Red", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Rojo", "hex": "#7A0F1E", "ref": "240", "url": "https://www.manicura24.es/products/esmalte-semipermanente-dark-red-240", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 16, "nombre": "Tango", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Rojo", "hex": "#C8341F", "ref": "232", "url": "https://www.manicura24.es/products/esmalte-semipermanente-tango-232", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 17, "nombre": "Chocolate", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Marron", "hex": "#4A2C1E", "ref": "277", "url": "https://www.manicura24.es/products/esmalte-semipermanente-chocolate-277", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 18, "nombre": "Xtreme Black", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Negro", "hex": "#161616", "ref": "282", "url": "https://www.manicura24.es/products/esmalte-semipermanente-xtreme-black-282", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 19, "nombre": "Nature White", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Blanco", "hex": "#F5F1E8", "ref": "6", "url": "https://www.manicura24.es/products/esmalte-semipermanente-nature-white-006", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 20, "nombre": "Classic White", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Blanco", "hex": "#FAFAFA", "ref": "3", "url": "https://www.manicura24.es/products/esmalte-semipermanente-classic-white-003", "precio": 5.5, "stock": 1, "need": 0, "desc": false}, {"id": 21, "nombre": "Glaseado Blanco 1", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Glaseado", "hex": "#F4EDEA", "ref": "1", "url": "https://www.manicura24.es/products/esmalte-semipermanente-glazed-nr-01", "precio": 6.99, "stock": 1, "need": 0, "desc": false}, {"id": 22, "nombre": "Fluor Naranja", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Fluor", "hex": "#FF7A1A", "ref": "3", "url": "", "precio": 0.0, "stock": 1, "need": 0, "desc": true}, {"id": 23, "nombre": "Fluor Rosa", "producto": "Esmalte", "marca": "Manicura 24", "tono": "Fluor", "hex": "#FF4DA6", "ref": "1", "url": "", "precio": 0.0, "stock": 1, "need": 0, "desc": true}, {"id": 24, "nombre": "Lemon", "producto": "Aceite", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/care-aceites-para-cuticulas-aceite-de-cuticula-lemon", "precio": 2.99, "stock": 1, "need": 0, "desc": false}, {"id": 25, "nombre": "Peach Orange", "producto": "Aceite", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/care-aceites-para-cuticulas-aceite-de-cuticula-peach-orange", "precio": 2.99, "stock": 1, "need": 0, "desc": false}, {"id": 26, "nombre": "Melon Gum", "producto": "Aceite", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/aceite-de-cuticulas-melon-gum", "precio": 2.99, "stock": 1, "need": 0, "desc": false}, {"id": 27, "nombre": "Clear", "producto": "Builder gel in a bottle", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/builder-gel-in-a-bottle-clear", "precio": 12.99, "stock": 1, "need": 0, "desc": false}, {"id": 28, "nombre": "Gel", "producto": "Cristal Top", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/crystal-top-gel", "precio": 6.99, "stock": 1, "need": 0, "desc": false}, {"id": 29, "nombre": "Anti-Hongo", "producto": "Solución", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/care-tratamientos-para-hongos-liquido-antifungico", "precio": 3.99, "stock": 1, "need": 0, "desc": false}, {"id": 30, "nombre": "Adherente", "producto": "Primer", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acid-primer", "precio": 5.99, "stock": 1, "need": 0, "desc": false}, {"id": 31, "nombre": "Ultra Bond", "producto": "Primer", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/primer-ultra-bond", "precio": 5.99, "stock": 1, "need": 0, "desc": false}, {"id": 32, "nombre": "Nail Prep", "producto": "Preparador", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/nail-prep", "precio": 4.99, "stock": 1, "need": 0, "desc": false}, {"id": 33, "nombre": "Cleaner", "producto": "Limpiador", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/accesorios-higiene-y-desinfeccion-cleaner-liquido-limpiador", "precio": 3.5, "stock": 1, "need": 0, "desc": false}, {"id": 34, "nombre": "Remover", "producto": "Premium Remover", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/accesorios-higiene-y-desinfeccion-premium-remover", "precio": 4.5, "stock": 1, "need": 0, "desc": false}, {"id": 35, "nombre": "Monomero", "producto": "Líquido Acrilico Premium", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acrilico-productos-basicos-liquido-acrilico-premium-calidad-superior", "precio": 11.99, "stock": 1, "need": 0, "desc": false}, {"id": 36, "nombre": "Monomero Acrygel", "producto": "Líquido Acrygel", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acrygel-slip-solution", "precio": 8.99, "stock": 1, "need": 0, "desc": false}, {"id": 37, "nombre": "Clear", "producto": "Builder Gel", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/gel-uv-gel-de-construccion-builder-gel-clear", "precio": 4.99, "stock": 1, "need": 0, "desc": false}, {"id": 38, "nombre": "Extensión Cover", "producto": "Builder Gel", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/gel-uv-gel-de-construccion-builder-gel-extension-cover", "precio": 4.99, "stock": 1, "need": 0, "desc": false}, {"id": 39, "nombre": "Cover Rose", "producto": "Polvo Acrílico", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acrilico-productos-basicos-polvo-acrilico-cover-rose", "precio": 4.5, "stock": 1, "need": 0, "desc": false}, {"id": 40, "nombre": "Clear", "producto": "Polvo Acrílico", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acrilico-productos-basicos-polvo-acrilico-clear", "precio": 4.5, "stock": 1, "need": 0, "desc": false}, {"id": 41, "nombre": "Nude Rose", "producto": "Acrygel", "marca": "Manicura 24", "tono": "-", "hex": "", "ref": "-", "url": "https://www.manicura24.es/products/acrygel-nude-rose", "precio": 15.99, "stock": 1, "need": 0, "desc": false}];
+let items,tab='stock',q='',tono='',showAll=false,pick='';
+try{items=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+if(!items||!items.length){items=seed;save();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(items));}catch(e){alert('No se pudo guardar');}}
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+const eur=n=>n.toFixed(2).replace('.',',')+' €';
+const find=id=>items.find(x=>x.id===id);
+const toOrder=it=>Math.max(0,it.need-it.stock);
+const dot=it=>it.hex?`<span class="dot" style="background:${it.hex}"></span>`:'';
+function sorted(){
+  const k=i=>(i.producto==='Esmalte'?'0':'1')+i.producto+'|'+i.tono+'|'+i.nombre;
+  return items.slice().sort((a,b)=>k(a)<k(b)?-1:1);
+}
+function adj(id,d){const it=find(id),f=tab==='ped'?'need':'stock';it[f]=Math.max(0,it[f]+d);save();tab==='ped'?render():renderList();}
+function setq(id){
+  const it=find(id),f=tab==='ped'?'need':'stock',v=parseInt(prompt('Cantidad:',it[f]),10);
+  if(isNaN(v)||v<0)return;it[f]=v;save();tab==='ped'?render():renderList();
+}
+function del(id){const it=find(id);if(!confirm('¿Borrar '+it.nombre+'?'))return;items=items.filter(x=>x.id!==id);save();renderList();}
+function setHex(id,h){find(id).hex=h;save();renderCat();}
+function setTab(t){tab=t;window.scrollTo(0,0);render();}
+function card(it){
+  const ped=tab==='ped';
+  const sub=ped?`Stock: ${it.stock} · <b>Pedir: ${toOrder(it)}</b>`:`${esc(it.producto)}${it.tono&&it.tono!=='-'?' · '+esc(it.tono):''} · ${eur(it.precio)}${it.desc?' <span class="tag">Descatalogado</span>':''}`;
+  return `<div class="card"><div class="info">${dot(it)}<b class="${!ped&&it.stock===0&&!it.desc?'low':''}">${esc(it.nombre)}</b> <span style="color:#888">${esc(it.ref)}</span><small>${sub}</small></div>
+  <div class="q"><button class="m" onclick="adj(${it.id},-1)">−</button><span onclick="setq(${it.id})">${ped?it.need:it.stock}</span><button onclick="adj(${it.id},1)">+</button></div>
+  ${ped?'':`<button class="x" onclick="del(${it.id})">✕</button>`}</div>`;
+}
+function listView(){return `<input type="search" placeholder="Buscar (color, ref, producto...)" value="${esc(q)}" oninput="q=this.value;renderList()"><div id="l"></div>`;}
+function renderList(){
+  const t=q.toLowerCase();let h='',last='';
+  sorted().forEach(it=>{
+    if(tab==='ped'&&it.desc)return;
+    if(t&&(it.nombre+' '+it.ref+' '+it.producto+' '+it.tono+' '+it.marca).toLowerCase().indexOf(t)<0)return;
+    if(it.producto!==last){h+=`<h3>${esc(it.producto)}</h3>`;last=it.producto;}
+    h+=card(it);
+  });
+  document.getElementById('l').innerHTML=h||'<p>Sin resultados</p>';
+}
+/* ---- Catálogo ---- */
+function rgb(h){return [1,3,5].map(i=>parseInt(h.substr(i,2),16));}
+function dist(a,b){const x=rgb(a),y=rgb(b);return 2*(x[0]-y[0])**2+4*(x[1]-y[1])**2+3*(x[2]-y[2])**2;}
+function catView(){
+  const tonos=[...new Set(items.filter(i=>i.hex).map(i=>i.tono))];
+  const chips=['',...tonos].map(t=>`<span class="chip ${tono===t?'on':''}" onclick="tono='${t}';pick='';render()">${t||'Todos'}</span>`).join('');
+  return `<h3>Catálogo de colores</h3><div class="chips">${chips}</div>
+  <label class="row"><input type="checkbox" style="width:auto" ${showAll?'checked':''} onchange="showAll=this.checked;renderCat()"> Mostrar también los que no tengo</label>
+  Buscar por color parecido:<div class="row"><input type="color" value="${pick||'#e91e63'}" oninput="pick=this.value;renderCat()"><button class="btn g" style="width:auto;margin:0" onclick="pick='';render()">Quitar</button></div>
+  <p style="color:#888;font-size:13px;margin:0 0 8px">Toca un círculo para corregir su color.</p><div id="cat" class="grid"></div>`;
+}
+function renderCat(){
+  let l=items.filter(i=>i.hex&&(!tono||i.tono===tono)&&(showAll?!i.desc||i.stock>0:i.stock>0));
+  l=pick?l.sort((a,b)=>dist(a.hex,pick)-dist(b.hex,pick)):l.sort((a,b)=>(a.tono+a.nombre<b.tono+b.nombre?-1:1));
+  document.getElementById('cat').innerHTML=l.map(it=>`<div class="tile"><label class="sw" style="background:${it.hex}"><input type="color" value="${it.hex}" onchange="setHex(${it.id},this.value)"></label>
+   <b>${esc(it.nombre)}</b><small>Ref ${esc(it.ref)}</small><small class="${it.stock?'':'low'}">${it.stock?it.stock+' uds':'sin stock'}</small></div>`).join('')||'<p style="grid-column:1/4">No tienes ninguno con ese filtro. Mete stock en la pestaña Stock.</p>';
+}
+/* ---- Pedido ---- */
+function pedView(){
+  let n=0,tot=0;items.forEach(i=>{if(i.desc)return;const p=toOrder(i);n+=p;tot+=p*i.precio;});
+  return `<h3>Pedido</h3><p>Pon lo que <b>necesitas</b>. Se compara con el stock y se pide la diferencia.</p>
+  <div class="card"><div class="info"><b>${n} unidades a pedir</b><small>Total aprox.: ${eur(tot)}</small></div></div>
+  <button class="btn" onclick="makePdf()">📄 Generar PDF del pedido</button>
+  <button class="btn g" onclick="resetNeed()">Poner necesidades a 0</button>`+listView();
+}
+function resetNeed(){if(!confirm('¿Poner todas las necesidades a 0?'))return;items.forEach(i=>i.need=0);save();render();}
+/* ---- Añadir y copia ---- */
+function addView(){
+  const prods=[...new Set(items.map(i=>i.producto))].map(p=>`<option>${esc(p)}</option>`).join('');
+  const tonos=[...new Set(items.filter(i=>i.hex).map(i=>i.tono))].map(p=>`<option>${esc(p)}</option>`).join('');
+  return `<h3>Añadir producto</h3>Nombre / color<input id="a1">Producto<input id="a2" list="pl" value="Esmalte"><datalist id="pl">${prods}</datalist>
+  Marca<input id="a3" value="Manicura 24">Tonalidad (solo esmaltes)<input id="a4" list="tl"><datalist id="tl">${tonos}</datalist>
+  Color (solo esmaltes)<input id="a5" type="color" value="#e91e63">Referencia<input id="a6">Enlace web (opcional)<input id="a7">
+  Precio (€)<input id="a8" type="number" step="0.01" value="0">Stock inicial<input id="a9" type="number" value="0">
+  <button class="btn" onclick="addItem()">Guardar producto</button>
+  <h3>Copia de seguridad</h3><textarea id="bk" rows="4" placeholder="Aquí aparece la copia"></textarea>
+  <button class="btn g" onclick="exportBk()">Crear copia (luego copia el texto y pégalo en Notas)</button>
+  <button class="btn g" onclick="importBk()">Restaurar desde el texto de arriba</button>`;
+}
+function addItem(){
+  const g=i=>document.getElementById(i).value.trim();
+  if(!g('a1')){alert('Pon el nombre');return;}
+  const esm=g('a2').toLowerCase()==='esmalte';
+  items.push({id:Math.max(0,...items.map(i=>i.id))+1,nombre:g('a1'),producto:g('a2')||'Otro',marca:g('a3'),tono:esm?(g('a4')||'Otro'):'-',hex:esm?g('a5'):'',
+   ref:g('a6')||'-',url:g('a7'),precio:parseFloat(g('a8'))||0,stock:parseInt(g('a9'),10)||0,need:0,desc:false});
+  save();alert('Producto añadido');setTab('stock');
+}
+function exportBk(){const t=document.getElementById('bk');t.value=JSON.stringify(items);t.select();t.setSelectionRange(0,t.value.length);}
+function importBk(){
+  try{const d=JSON.parse(document.getElementById('bk').value);if(!Array.isArray(d)||!d.length)throw 0;
+    if(!confirm('Esto reemplaza todo lo actual. ¿Seguro?'))return;items=d;save();alert('Restaurado');setTab('stock');}
+  catch(e){alert('El texto no es una copia válida');}
+}
+function render(){
+  const m=document.getElementById('main');
+  m.innerHTML=tab==='stock'?listView():tab==='cat'?catView():tab==='ped'?pedView():addView();
+  if(tab==='stock'||tab==='ped')renderList();
+  if(tab==='cat')renderCat();
+  document.getElementById('tabs').innerHTML=[['stock','📦 Stock'],['cat','🎨 Catálogo'],['ped','🧾 Pedido'],['add','➕ Añadir']]
+    .map(t=>`<button class="${tab===t[0]?'on':''}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join('');
+}
+/* ---- PDF sin librerías ---- */
+function pt(x,y,s,b,z){
+  s=String(s).replace(/\u20ac/g,'\u0080').replace(/[^\x00-\xff]/g,'?').replace(/([\\()])/g,'\\$1');
+  return `BT /F${b?2:1} ${z||9} Tf ${x} ${y} Td (${s}) Tj ET\n`;
+}
+const cut=(s,n)=>String(s).length>n?String(s).slice(0,n-1)+'.':String(s);
+function makePdf(){
+  const rows=sorted().filter(i=>!i.desc&&toOrder(i)>0);
+  if(!rows.length){alert('No hay nada que pedir: el stock cubre lo que necesitas.');return;}
+  const X=[40,150,285,335,385,430,480],pages=[],annots=[];let c='',an=[],y=0,tot=0;
+  const flush=()=>{pages.push(c);annots.push(an);};
+  function head(m){
+    c='';an=[];y=800;
+    if(m===1){c+=pt(40,y,'PEDIDO DE PRODUCTOS - ESTUDIO DE UNAS',1,12);y-=16;c+=pt(40,y,'Fecha: '+new Date().toLocaleDateString('es-ES'),0,10);y-=28;}
+    if(m!==2){['Producto','Color','Ref','Necesito','Stock','Pedir','Subtotal'].forEach((h,k)=>c+=pt(X[k],y,h,1));y-=18;}
+  }
+  head(1);
+  rows.forEach(it=>{
+    if(y<60){flush();head(0);}
+    const p=toOrder(it),sub=p*it.precio;tot+=sub;
+    [cut(it.producto,22),cut(it.nombre,22),it.ref,it.need,it.stock,p,eur(sub)].forEach((v,k)=>c+=pt(X[k],y,v,k===5));
+    y-=16;
+  });
+  y-=10;c+=pt(400,y,'TOTAL: '+eur(tot),1,11);y-=34;
+  const wl=rows.filter(r=>/^https?:/.test(r.url));
+  if(wl.length){
+    if(y<100){flush();head(2);}
+    c+=pt(40,y,'ENLACES DE COMPRA',1,10);y-=18;
+    wl.forEach(it=>{
+      if(y<60){flush();head(2);}
+      c+=pt(40,y,`${it.nombre} (${it.producto}) ref ${it.ref} - pedir ${toOrder(it)}`,1,9);y-=11;
+      c+=pt(40,y,it.url,0,6);
+      an.push({r:`40 ${y-2} 555 ${y+7}`,u:it.url.replace(/([\\()])/g,'\\$1')});y-=16;
+    });
+  }
+  flush();
+  const o=[],N=pages.length,ao=[];let i;
+  o[1]='<< /Type /Catalog /Pages 2 0 R >>';
+  o[2]=`<< /Type /Pages /Kids [${pages.map((_,k)=>(5+2*k)+' 0 R').join(' ')}] /Count ${N} >>`;
+  o[3]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>';
+  o[4]='<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>';
+  for(i=0;i<N;i++){
+    const refs=annots[i].map(a=>{ao.push(`<< /Type /Annot /Subtype /Link /Rect [${a.r}] /Border [0 0 0] /A << /S /URI /URI (${a.u}) >> >>`);return (4+2*N+ao.length)+' 0 R';});
+    o[5+2*i]=`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${6+2*i} 0 R${refs.length?' /Annots ['+refs.join(' ')+']':''} >>`;
+    o[6+2*i]=`<< /Length ${pages[i].length} >>\nstream\n${pages[i]}endstream`;
+  }
+  ao.forEach((a,k)=>o[5+2*N+k]=a);
+  let out='%PDF-1.4\n';const off=[];
+  for(i=1;i<o.length;i++){off[i]=out.length;out+=i+' 0 obj\n'+o[i]+'\nendobj\n';}
+  const xr=out.length;out+='xref\n0 '+o.length+'\n0000000000 65535 f \n';
+  for(i=1;i<o.length;i++)out+=('0000000000'+off[i]).slice(-10)+' 00000 n \n';
+  out+=`trailer\n<< /Size ${o.length} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;
+  const u=new Uint8Array(out.length);for(i=0;i<out.length;i++)u[i]=out.charCodeAt(i)&255;
+  const blob=new Blob([u],{type:'application/pdf'});let f;
+  try{f=new File([blob],'pedido.pdf',{type:'application/pdf'});}catch(e){}
+  if(f&&navigator.canShare&&navigator.canShare({files:[f]})){navigator.share({files:[f],title:'Pedido'}).catch(()=>{});return;}
+  const url=URL.createObjectURL(blob);if(!window.open(url,'_blank'))location.href=url;
+}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+render();
+</script>
+</body>
+</html>
